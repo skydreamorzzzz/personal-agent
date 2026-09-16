@@ -1,0 +1,15 @@
+llm:
+  provider: deepseek
+
+  # 模型名称后续可能修改，因此这里只作为普通配置项。
+  model: deepseek-chat
+
+  credential:
+    # 当前启用：从环境变量读取 API Key
+    source: env
+    env_name: DEEPSEEK_API_KEY
+
+    # 备用方案：从本地文件读取 API Key
+    # 如果未来切换到 file 模式，将 source 改为 file，
+    # 然后取消下面 path 的注释。
+    # path: secret/llm/API.txt
