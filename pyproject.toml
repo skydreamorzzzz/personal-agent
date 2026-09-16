@@ -10,8 +10,8 @@ requires-python = ">=3.11"
 dependencies = [
     "langgraph",
     "langchain-core",
+    "langchain-deepseek",
     "PyYAML",
-    "openai",
 ]
 
 [tool.setuptools.packages.find]

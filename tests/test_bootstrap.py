@@ -1,8 +1,19 @@
 import pytest
+from langchain_core.messages import AIMessage
 
 from personal_agent.application import Application
 from personal_agent.bootstrap import bootstrap_application
 from personal_agent.config import ConfigurationError, load_config
+from personal_agent.llm.client import LLMConfigurationError
+
+
+class FakeModel:
+    def invoke(self, messages):
+        return AIMessage(content="fake response")
+
+
+def fake_model_factory(config):
+    return FakeModel()
 
 
 def test_default_config_loads():
@@ -97,19 +108,18 @@ def test_file_credential_path_is_resolved_without_reading_file(tmp_path):
 def test_missing_env_credential_is_not_read_or_required(monkeypatch):
     monkeypatch.delenv("DEEPSEEK_API_KEY", raising=False)
 
-    application = bootstrap_application()
-
-    assert application.config.llm.credential.env_name == "DEEPSEEK_API_KEY"
-    assert application.context.model is None
+    with pytest.raises(LLMConfigurationError, match="Missing required environment variable"):
+        bootstrap_application()
 
 
 def test_bootstrap_returns_application_with_empty_registry():
-    application = bootstrap_application()
+    application = bootstrap_application(model_factory=fake_model_factory)
 
     assert isinstance(application, Application)
     assert application.graph is not None
     assert application.context.capability_registry.schemas() == []
     assert application.context.workspace_path == application.config.paths.workspace
+    assert isinstance(application.context.model, FakeModel)
 
 
 def test_bootstrap_does_not_create_runtime_directories(tmp_path):
@@ -130,7 +140,7 @@ def test_bootstrap_does_not_create_runtime_directories(tmp_path):
         encoding="utf-8",
     )
 
-    bootstrap_application(config_path)
+    bootstrap_application(config_path, model_factory=fake_model_factory)
 
     assert not (tmp_path / "workspace").exists()
     assert not (tmp_path / "runtime").exists()

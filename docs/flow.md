@@ -30,6 +30,16 @@ place or rebuild the full message history. Only `messages` is currently a
 formally exercised core field; task, artifacts, pending action, status, and
 route remain scaffold fields with future contracts.
 
+## Agent model call
+
+The current safe Agent path is:
+
+`AgentState.messages -> Agent -> [SystemMessage, ...messages] -> RuntimeContext.model -> AIMessage -> partial State update`.
+
+The temporary `SystemMessage` is not written to State. The resulting
+`AIMessage` is merged by `add_messages`, then the existing scaffold routing
+continues to `finalize`. No tools are bound in this stage.
+
 ## Main flow
 
 Every task starts by retrieving relevant long-term memory, then enters the agent

@@ -46,10 +46,15 @@ def test_add_messages_appends_node_updates_in_order():
 
 
 def test_messages_only_initial_state_runs_current_safe_graph():
-    application = bootstrap_application()
+    class FakeModel:
+        def invoke(self, messages):
+            return AIMessage(content="fake response")
+
+    application = bootstrap_application(model_factory=lambda config: FakeModel())
 
     result = application.graph.invoke(
-        {"messages": [HumanMessage(content="hello")]}
+        {"messages": [HumanMessage(content="hello")]},
+        context=application.context,
     )
 
     assert result["messages"][0].content == "hello"

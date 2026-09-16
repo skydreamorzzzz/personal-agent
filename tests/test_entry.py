@@ -43,13 +43,15 @@ def test_user_message_becomes_human_message_without_system_message():
     seen = {}
 
     class FakeGraph:
-        def invoke(self, state):
+        def invoke(self, state, *, context):
             seen["state"] = state
+            seen["context"] = context
             return {"status": "completed"}
 
     @dataclass
     class FakeApplication:
         graph: object
+        context: object = object()
 
     result = submit_user_message(
         FakeApplication(FakeGraph()), normalize_user_message("hello", "web")
@@ -60,6 +62,7 @@ def test_user_message_becomes_human_message_without_system_message():
     assert len(messages) == 1
     assert isinstance(messages[0], HumanMessage)
     assert not any(isinstance(message, SystemMessage) for message in messages)
+    assert seen["context"] is not None
 
 
 def test_agent_state_uses_add_messages_annotation():

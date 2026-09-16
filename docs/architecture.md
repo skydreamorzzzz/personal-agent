@@ -78,6 +78,16 @@ persistence slots. Neither layer owns the other's data: credentials, raw
 configuration, workspace paths, and clients do not belong in State, while
 messages and current actions do not belong in RuntimeContext.
 
+## Agent and LLM boundary
+
+The Agent node reads `AgentState.messages`, temporarily prepends the minimal
+system prompt, and invokes the model from `RuntimeContext`. It returns an
+`AIMessage` as a partial State update. The system prompt is model-call context,
+not persisted State. Bootstrap constructs the configured DeepSeek model through
+the LLM factory; the Agent does not read credentials or construct clients. Tool
+binding is intentionally not active yet, and the current finalize route remains
+a scaffold behavior.
+
 - **Checkpoint**: where the current task is paused or executing.
 - **Knowledge**: the user's source material, with provenance and original paths.
 - **Memory**: cross-task information, initially `profile`, `rules`, and `episodes`.

@@ -43,4 +43,7 @@ def submit_user_message(
     if not isinstance(user_input, UserMessageInput):
         raise EntryInputError("submit_user_message requires UserMessageInput")
 
-    return application.graph.invoke({"messages": [HumanMessage(content=user_input.content)]})
+    return application.graph.invoke(
+        {"messages": [HumanMessage(content=user_input.content)]},
+        context=application.context,
+    )

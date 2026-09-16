@@ -9,6 +9,7 @@ from personal_agent.runtime.nodes.memory_reflection import memory_reflection
 from personal_agent.runtime.nodes.memory_retrieve import memory_retrieve
 from personal_agent.runtime.nodes.memory_write import memory_write
 from personal_agent.runtime.nodes.tool_dispatch import tool_dispatch
+from personal_agent.runtime.context import RuntimeContext
 from personal_agent.runtime.routing import route_after_agent, route_after_approval
 from personal_agent.runtime.state import AgentState
 
@@ -16,7 +17,7 @@ from personal_agent.runtime.state import AgentState
 def build_graph():
     """Build the v0.1 graph without connecting external side effects."""
 
-    graph = StateGraph(AgentState)
+    graph = StateGraph(AgentState, context_schema=RuntimeContext)
     graph.add_node("memory_retrieve", memory_retrieve)
     graph.add_node("agent", agent)
     graph.add_node("tool_dispatch", tool_dispatch)
