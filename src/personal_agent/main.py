@@ -4,6 +4,7 @@ from pathlib import Path
 
 from personal_agent.application import Application
 from personal_agent.bootstrap import bootstrap_application
+from personal_agent.entry.cli import run_once
 
 
 def create_application(config_path: str | Path | None = None) -> Application:
@@ -14,7 +15,8 @@ def create_application(config_path: str | Path | None = None) -> Application:
 
 def main() -> Application:
     application = create_application()
-    print("Entry layer is not implemented yet.")
+    result = run_once(application)
+    print(result)
     return application
 
 

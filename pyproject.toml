@@ -9,6 +9,7 @@ description = "Architecture-first personal agent scaffold"
 requires-python = ">=3.11"
 dependencies = [
     "langgraph",
+    "langchain-core",
     "PyYAML",
     "openai",
 ]

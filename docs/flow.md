@@ -7,6 +7,19 @@ construct RuntimeContext -> build_graph -> Application`.
 
 This composition step is not a LangGraph node and does not invoke the graph.
 
+## Entry channels
+
+User input follows:
+
+`external adapter -> UserMessageInput -> HumanMessage -> graph.invoke`.
+
+CLI, web-shaped payloads, and mobile messages share this contract. Entry does
+not add a system prompt or manufacture assistant/tool messages. Background
+events follow `external event -> BackgroundEventInput`; they remain structured
+until a future Task/State design decides how to integrate them. A human answer
+to a paused graph follows a separate future `resume_thread -> Command(resume=...)`
+channel and is not a `UserMessageInput`.
+
 ## Main flow
 
 Every task starts by retrieving relevant long-term memory, then enters the agent

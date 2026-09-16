@@ -26,6 +26,21 @@ application configuration (YAML values and references), which is separate from
 runtime dependencies (`RuntimeContext` objects such as the empty capability
 registry and compiled graph).
 
+## Entry boundary
+
+Entry is the boundary from the external world into an already-bootstrapped
+runtime. CLI, web-shaped, and mobile-shaped user input is normalized into
+`UserMessageInput`, then the Entry layer creates one `HumanMessage` and invokes
+the graph. Entry does not create `SystemMessage`, `AIMessage`, or `ToolMessage`,
+and it does not load configuration or construct dependencies.
+
+Structured background events use the separate `BackgroundEventInput` contract.
+They are not rewritten as user speech or `HumanMessage`; their Task/State
+integration remains a later design step. A response to a paused graph is also a
+different channel: future `resume_thread` handling will use LangGraph
+`Command(resume=...)`, not a new user message. No interrupt/resume implementation
+is connected yet.
+
 ## Five layers
 
 1. **Entry / UI** accepts user input, confirmations, or external events.
