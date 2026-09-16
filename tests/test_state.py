@@ -1,4 +1,4 @@
-from typing import Annotated, TypedDict
+from typing import Annotated, TypedDict, get_args
 
 from langchain_core.messages import AIMessage, AnyMessage, HumanMessage
 from langgraph.graph import END, START, StateGraph
@@ -10,8 +10,9 @@ from personal_agent.runtime.state import AgentState
 
 def test_agent_state_messages_uses_add_messages_reducer():
     annotation = AgentState.__annotations__["messages"]
+    annotated_message_type = get_args(annotation)[0]
 
-    assert annotation.__metadata__ == (add_messages,)
+    assert annotated_message_type.__metadata__ == (add_messages,)
 
 
 class MessageTestState(TypedDict):
@@ -58,18 +59,13 @@ def test_messages_only_initial_state_runs_current_safe_graph():
 def test_agent_state_does_not_require_runtime_context_dependencies():
     fields = AgentState.__annotations__
 
-    assert set(fields) == {
-        "messages",
-        "task",
-        "artifacts",
-        "pending_action",
-        "status",
-        "route",
-    }
+    assert "messages" in fields
     assert "model" not in fields
     assert "capability_registry" not in fields
     assert "workspace_path" not in fields
     assert "config" not in fields
+
+    assert AgentState.__required_keys__ == {"messages"}
 
 
 def test_placeholder_state_fields_are_optional():
