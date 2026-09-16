@@ -20,6 +20,16 @@ until a future Task/State design decides how to integrate them. A human answer
 to a paused graph follows a separate future `resume_thread -> Command(resume=...)`
 channel and is not a `UserMessageInput`.
 
+## State updates
+
+`UserMessageInput -> HumanMessage -> AgentState.messages`. A graph node reads
+the current State and returns a partial update. For messages, LangGraph's
+`add_messages` reducer merges the returned message list into the existing
+history, preserving earlier messages. Nodes do not append to the input State in
+place or rebuild the full message history. Only `messages` is currently a
+formally exercised core field; task, artifacts, pending action, status, and
+route remain scaffold fields with future contracts.
+
 ## Main flow
 
 Every task starts by retrieving relevant long-term memory, then enters the agent

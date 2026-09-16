@@ -63,6 +63,21 @@ pending action, and status. `RuntimeContext` contains process dependencies such 
 model configuration, workspace path, checkpoint backend, memory backend,
 capability registry, and logger. It is not graph state.
 
+The current formal State contract is `AgentState.messages`: the message history
+shared by one graph execution/thread. Entry injects a `HumanMessage`; future
+Agent/LLM and tool boundaries may return `AIMessage` and `ToolMessage` updates.
+Nodes return partial updates such as `{"messages": [new_message]}`. LangGraph's
+`add_messages` reducer merges those updates; it is a reducer, not a message
+type. The current `task`, `artifacts`, `pending_action`, `status`, and `route`
+fields remain scaffold/future fields. In particular, `route` is retained for
+the current safe graph and does not yet represent a final routing contract.
+
+State is execution-specific mutable data. RuntimeContext holds process
+dependencies such as the model slot, capability registry, paths, logger, and
+persistence slots. Neither layer owns the other's data: credentials, raw
+configuration, workspace paths, and clients do not belong in State, while
+messages and current actions do not belong in RuntimeContext.
+
 - **Checkpoint**: where the current task is paused or executing.
 - **Knowledge**: the user's source material, with provenance and original paths.
 - **Memory**: cross-task information, initially `profile`, `rules`, and `episodes`.
