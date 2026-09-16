@@ -1,5 +1,12 @@
 # Runtime Flow v0.1
 
+## Before graph invocation
+
+`main.py -> bootstrap_application -> load/validate config -> resolve paths ->
+construct RuntimeContext -> build_graph -> Application`.
+
+This composition step is not a LangGraph node and does not invoke the graph.
+
 ## Main flow
 
 Every task starts by retrieving relevant long-term memory, then enters the agent

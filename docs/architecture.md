@@ -6,6 +6,26 @@ Personal Agent is designed as a stateful personal-agent runtime. LangGraph is th
 control plane for state transitions; it is not the capability implementation and
 the LLM is not the owner of irreversible actions.
 
+## Bootstrap and composition root
+
+Bootstrap runs before graph invocation and is outside the five-layer business
+flow. It loads and validates typed application configuration, resolves the
+repository/project paths, creates the currently available dependency objects,
+constructs `RuntimeContext`, and compiles the LangGraph into an `Application`
+container. It does not execute a task, parse CLI input, register placeholder
+capabilities, read credential values, or connect an LLM.
+
+The default configuration is located from the source package's repository root,
+not from `os.getcwd()`. An explicit `config_path` takes precedence. Relative
+paths in YAML, including a future file credential reference, are resolved from
+the project root associated with the configuration file. Bootstrap only stores
+credential references, so configured does not mean connected.
+
+The development environment (Conda `pa` and installed packages) is separate from
+application configuration (YAML values and references), which is separate from
+runtime dependencies (`RuntimeContext` objects such as the empty capability
+registry and compiled graph).
+
 ## Five layers
 
 1. **Entry / UI** accepts user input, confirmations, or external events.

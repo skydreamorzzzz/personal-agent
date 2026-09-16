@@ -13,3 +13,8 @@ llm:
     # 如果未来切换到 file 模式，将 source 改为 file，
     # 然后取消下面 path 的注释。
     # path: secret/llm/API.txt
+
+paths:
+  workspace: workspace
+  runtime_data: data/runtime
+  log: log/runtime

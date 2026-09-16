@@ -5,3 +5,8 @@ llm:
   credential:
     source: env
     env_name: DEEPSEEK_API_KEY
+
+paths:
+  workspace: workspace
+  runtime_data: data/runtime
+  log: log/runtime
