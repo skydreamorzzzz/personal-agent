@@ -1,1 +1,17 @@
 secret/
+.env
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+*.sqlite3
+data/runtime/*
+!data/runtime/README.md
+log/runtime/
+*.log
+logs/*.jsonl
+.DS_Store
+.idea/
+.vscode/

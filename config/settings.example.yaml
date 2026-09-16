@@ -1,0 +1,7 @@
+llm:
+  provider: deepseek
+  model: deepseek-chat
+  endpoint: https://api.deepseek.com
+  credential:
+    source: env
+    env_name: DEEPSEEK_API_KEY
